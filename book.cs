@@ -1,6 +1,5 @@
 ﻿using Library;
 using System;
-using System.Xml.Linq;
 namespace Library
 {
 
@@ -34,7 +33,7 @@ namespace Library
 
         public override string ToString()
         {
-            return $"[ID: {bookId}] Title: '{title}' | Author: {author} | Available Copies: {copies}";
+            return $"[ID: {bookId}] Title: '{title}' \n Author: {author} \n Available Copies: {copies}";
         }
     }
 
