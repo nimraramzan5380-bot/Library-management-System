@@ -1,96 +1,114 @@
 ﻿using System;
 using System.Collections.Generic;
-using Library;
 
 namespace Library
 {
-  
-        public void AdminMenu()
+    public class AdminMenuHandler
     {
-        while (true)
+       
+        public void MenuSystem(Library lib)
         {
-            Console.WriteLine("\n ADMIN MENU ");
-            Console.WriteLine("1. Add Book      2. View Books");
-            Console.WriteLine("3. Search Book   4. Add User");
-            Console.WriteLine("5. View Users    6. Issue Book");
-            Console.WriteLine("7. Return Book   8. View History");
-            Console.WriteLine("0. Back to Main Menu");
-
-            Console.Write("\nSelect Option: ");
-            string choice = Console.ReadLine();
-
-            switch (choice)
+            while (true)
             {
-                case "1":
-                    Console.Write("Enter Book ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int bid);
+                Console.WriteLine("\n ADMIN MENU ");
+                Console.WriteLine("1. Add Book      2. View Books");
+                Console.WriteLine("3. Search Book   4. Add User");
+                Console.WriteLine("5. View Users    6. Issue Book");
+                Console.WriteLine("7. Return Book   8. View History");
+                Console.WriteLine("0. Back to Main Menu");
 
-                    Console.Write("Enter Title: ");
-                    string title = Console.ReadLine();
+                Console.Write("\nSelect Option: ");
+                string choice = Console.ReadLine();
 
-                    Console.Write("Enter Author: ");
-                    string author = Console.ReadLine();
+                switch (choice)
+                {
+                    case "1":
+                        {
+                            Console.Write("Enter Book ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int bid);
 
-                    Console.Write("Enter Copies: ");
-                    int.TryParse(Console.ReadLine(), out int qty);
+                            Console.Write("Enter Title: ");
+                            string title = Console.ReadLine();
 
-                    lib.AddBook(bid, title, author, qty);
-                    break;
+                            Console.Write("Enter Author: ");
+                            string author = Console.ReadLine();
 
-                case "2":
-                    lib.ViewBooks();
-                    break;
+                            Console.Write("Enter Copies: ");
+                            int.TryParse(Console.ReadLine(), out int qty);
 
-                case "3":
-                    Console.Write("Enter Title or Author to search: ");
-                    string q = Console.ReadLine();
-                    lib.SearchBook(q);
-                    break;
+                            lib.AddBook(bid, title, author, qty);
+                            break;
+                        }
 
-                case "4":
-                    Console.Write("Enter User ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int uid);
+                    case "2":
+                        {
+                            lib.ViewBooks();
+                            break;
+                        }
 
-                    Console.Write("Enter User Name: ");
-                    string name = Console.ReadLine();
+                    case "3":
+                        {
+                            Console.Write("Enter Title or Author to search: ");
+                            string q = Console.ReadLine();
+                            lib.SearchBook(q);
+                            break;
+                        }
 
-                    lib.AddUser(uid, name);
-                    break;
+                    case "4":
+                        {
+                            Console.Write("Enter User ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int uid);
 
-                case "5":
-                    lib.ViewUsers();
-                    break;
+                            Console.Write("Enter User Name: ");
+                            string name = Console.ReadLine();
 
-                case "6":
-                    Console.Write("Enter User ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int issueUid);
+                            lib.AddUser(uid, name);
+                            break;
+                        }
 
-                    Console.Write("Enter Book ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int issueBid);
+                    case "5":
+                        {
+                            lib.ViewUsers();
+                            break;
+                        }
 
-                    lib.IssueBook(issueUid, issueBid);
-                    break;
+                    case "6":
+                        {
+                            Console.Write("Enter User ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int issueUid);
 
-                case "7":
-                    Console.Write("Enter User ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int returnUid);
+                            Console.Write("Enter Book ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int issueBid);
 
-                    Console.Write("Enter Book ID (number): ");
-                    int.TryParse(Console.ReadLine(), out int returnBid);
+                            lib.IssueBook(issueUid, issueBid);
+                            break;
+                        }
 
-                    lib.ReturnBook(returnUid, returnBid);
-                    break;
+                    case "7":
+                        {
+                            Console.Write("Enter User ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int returnUid);
 
-                case "8":
-                    lib.ViewHistory();
-                    break;
+                            Console.Write("Enter Book ID (number): ");
+                            int.TryParse(Console.ReadLine(), out int returnBid);
 
-                case "0":
-                    return;
+                            lib.ReturnBook(returnUid, returnBid);
+                            break;
+                        }
 
-                default:
-                    Console.WriteLine("Invalid Choice.");
-                    break;
+                    case "8":
+                        {
+                            lib.ViewHistory();
+                            break;
+                        }
+
+                    case "0":
+                        return;
+
+                    default:
+                        Console.WriteLine("Invalid Choice.");
+                        break;
+                }
             }
         }
     }
