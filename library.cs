@@ -1,164 +1,265 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace Library
 {
     public class Library
     {
-        private Dictionary<int, Book> books = new Dictionary<int, Book>();
-        private Dictionary<int, User> users = new Dictionary<int, User>();         
-        private List<string> history = new List<string>();
+        private string connectionString = @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=LibraryDB;Integrated Security=True;TrustServerCertificate=True;";
 
-        public void AddBook(int bookId, string title, string author, int copies) 
-
+        // 1. ADD BOOK
+        public void AddBook(int bookId, string title, string author, int quantity)
         {
-            if (books.ContainsKey(bookId))
-            {
-                Console.WriteLine($"\n Error: Book ID {bookId} already exists.");
-            }
-            else if (copies < 0)
+            if (quantity < 0)
             {
                 Console.WriteLine("\n Error: Copies cannot be negative.");
-            }
-            else
-            {
-                books[bookId] = new Book(bookId, title, author, copies);
-                Console.WriteLine($"\n Book '{title}' has been added successfully.");
-            }
-        }
-
-        public void ViewBooks()
-        {
-            Console.WriteLine("\n Current Library Inventory ");
-
-            if (books.Count == 0)
-            {
-                Console.WriteLine("The library is currently empty.");
                 return;
             }
 
-            foreach (Book book in books.Values)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine(book);
-            }
-        }
-
-        public void SearchBook(string query)
-        {
-            Console.WriteLine($"\n Search Results for '{query}' ");
-            bool found = false;
-
-            foreach (Book book in books.Values)
-            {
-                if (book.GetTitle().Contains(query, StringComparison.OrdinalIgnoreCase) ||
-                    book.GetAuthor().Contains(query, StringComparison.OrdinalIgnoreCase))
+                try
                 {
-                    Console.WriteLine(book);
-                    found = true;
+                    conn.Open();
+                    string query = "INSERT INTO Books (BookID, Title, Author, Quantity) VALUES (@id, @title, @author, @qty)";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", bookId);
+                        cmd.Parameters.AddWithValue("@title", title);
+                        cmd.Parameters.AddWithValue("@author", author);
+                        cmd.Parameters.AddWithValue("@qty", quantity);
+
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("\n [SUCCESS] Book permanently saved to database!");
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    if (ex.Number == 2627) // Primary Key violation
+                    {
+                        Console.WriteLine($"\n Error: Book ID {bookId} already exists.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"\n Database Error: {ex.Message}");
+                    }
                 }
             }
-
-            if (!found)
-                Console.WriteLine("No matching books found.");
         }
 
-        public void AddUser(int uId, string name)
+        // 2. VIEW BOOKS
+        public void ViewBooks()
         {
-            if (users.ContainsKey(uId))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine($"\n Error: User ID {uId} already registered.");
-            }
-            else
-            {
-                users[uId] = new User(uId, name);
-                Console.WriteLine($"\n User '{name}' registered.");
+                conn.Open();
+                string query = "SELECT * FROM Books";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Console.WriteLine("\n--- BOOKS IN DATABASE ---");
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("No books found in database.");
+                        return;
+                    }
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"ID: {reader["BookID"]} | Title: {reader["Title"]} | Author: {reader["Author"]} | Copies: {reader["Quantity"]}");
+                    }
+                }
             }
         }
 
+        // 3. SEARCH BOOK
+        public void SearchBook(string queryText)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "SELECT * FROM Books WHERE Title LIKE @q OR Author LIKE @q";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@q", "%" + queryText + "%");
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        Console.WriteLine($"\n--- SEARCH RESULTS FOR '{queryText}' ---");
+                        if (!reader.HasRows)
+                        {
+                            Console.WriteLine("No matching books found.");
+                            return;
+                        }
+
+                        while (reader.Read())
+                        {
+                            Console.WriteLine($"ID: {reader["BookID"]} | Title: {reader["Title"]} | Author: {reader["Author"]} | Copies: {reader["Quantity"]}");
+                        }
+                    }
+                }
+            }
+        }
+
+        // 4. ADD USER
+        public void AddUser(int userId, string name)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+                string query = "INSERT INTO Users (UserID, Name) VALUES (@uid, @name)";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@uid", userId);
+                    cmd.Parameters.AddWithValue("@name", name);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        Console.WriteLine("\n User added successfully to database!");
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine($"\n Database Error: {ex.Message}");
+                    }
+                }
+            }
+        }
+
+        // 5. VIEW USERS
         public void ViewUsers()
         {
-            Console.WriteLine("\n Registered Users ");
-
-            if (users.Count == 0)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine("No registered users.");
-                return;
-            }
+                conn.Open();
+                string query = "SELECT * FROM Users";
 
-            foreach (User user in users.Values)
-            {
-                Console.WriteLine(user);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Console.WriteLine("\n--- USERS LIST ---");
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("No users registered.");
+                        return;
+                    }
+
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"User ID: {reader["UserID"]} | Name: {reader["Name"]}");
+                    }
+                }
             }
         }
 
-        public void IssueBook(int uId, int bookId)
+        // 6. ISSUE BOOK
+        public void IssueBook(int userId, int bookId)
         {
-            if (!users.ContainsKey(uId))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine("\n Error: User not found.");
-                return;
-            }
+                conn.Open();
 
-            if (!books.ContainsKey(bookId))
-            {
-                Console.WriteLine("\n Error: Book not found.");
-                return;
-            }
+                string insertTx = "INSERT INTO Transactions (UserID, BookID, IssueDate) VALUES (@uid, @bid, GETDATE())";
+                string updateQty = "UPDATE Books SET Quantity = Quantity - 1 WHERE BookID = @bid AND Quantity > 0";
 
-            Book book = books[bookId];
-            User user = users[uId];
+                using (SqlCommand cmdTx = new SqlCommand(insertTx, conn))
+                using (SqlCommand cmdQty = new SqlCommand(updateQty, conn))
+                {
+                    cmdTx.Parameters.AddWithValue("@uid", userId);
+                    cmdTx.Parameters.AddWithValue("@bid", bookId);
+                    cmdQty.Parameters.AddWithValue("@bid", bookId);
 
-            if (book.UpdateCopies(-1))
-            {
-                user.IssueBook(book.GetTitle());
-                history.Add($"User {uId} issued '{book.GetTitle()}'");
-
-                Console.WriteLine(
-                    $"\n[SUCCESS] '{book.GetTitle()}' issued to {user.Getname()}.");
-            }
-            else
-            {
-                Console.WriteLine("\n Error: No copies available.");
+                    try
+                    {
+                        int rows = cmdQty.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            cmdTx.ExecuteNonQuery();
+                            Console.WriteLine("\n Book issued successfully!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n Book is out of stock or does not exist.");
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine($"\n Database Error: {ex.Message}");
+                    }
+                }
             }
         }
 
-        public void ReturnBook(int uId, int bookId)
+        // 7. RETURN BOOK
+        public void ReturnBook(int userId, int bookId)
         {
-            if (!users.ContainsKey(uId) || !books.ContainsKey(bookId))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine("\n[!] Error: Invalid User or Book ID.");
-                return;
-            }
+                conn.Open();
 
-            Book book = books[bookId];
-            User user = users[uId];
+                string updateTx = "UPDATE Transactions SET ReturnDate = GETDATE() WHERE UserID = @uid AND BookID = @bid AND ReturnDate IS NULL";
+                string updateQty = "UPDATE Books SET Quantity = Quantity + 1 WHERE BookID = @bid";
 
-            if (user.ReturnBook(book.GetTitle()))
-            {
-                book.UpdateCopies(1);
-                history.Add($"User {uId} returned '{book.GetTitle()}'");
+                using (SqlCommand cmdTx = new SqlCommand(updateTx, conn))
+                using (SqlCommand cmdQty = new SqlCommand(updateQty, conn))
+                {
+                    cmdTx.Parameters.AddWithValue("@uid", userId);
+                    cmdTx.Parameters.AddWithValue("@bid", bookId);
+                    cmdQty.Parameters.AddWithValue("@bid", bookId);
 
-                Console.WriteLine("\n[SUCCESS] Book returned successfully.");
-            }
-            else
-            {
-                Console.WriteLine("\n[!] Error: User does not have this book.");
+                    try
+                    {
+                        int rows = cmdTx.ExecuteNonQuery();
+                        if (rows > 0)
+                        {
+                            cmdQty.ExecuteNonQuery();
+                            Console.WriteLine("\n Book returned successfully!");
+                        }
+                        else
+                        {
+                            Console.WriteLine("\n No active issue record found for this user/book.");
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        Console.WriteLine($"\n Database Error: {ex.Message}");
+                    }
+                }
             }
         }
 
+        // 8. VIEW HISTORY
         public void ViewHistory()
         {
-            Console.WriteLine("\n Transaction History ");
-
-            if (history.Count == 0)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                Console.WriteLine("No transactions recorded.");
-                return;
-            }
+                conn.Open();
+                string query = @"SELECT t.TransactionID, u.Name, b.Title, t.IssueDate, t.ReturnDate 
+                                 FROM Transactions t 
+                                 JOIN Users u ON t.UserID = u.UserID 
+                                 JOIN Books b ON t.BookID = b.BookID";
 
-            foreach (string log in history)
-            {
-                Console.WriteLine(log);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    Console.WriteLine("\n--- TRANSACTION HISTORY ---");
+                    if (!reader.HasRows)
+                    {
+                        Console.WriteLine("No history found.");
+                        return;
+                    }
+
+                    while (reader.Read())
+                    {
+                        string returnStr = reader["ReturnDate"] == DBNull.Value ? "Not Returned" : Convert.ToDateTime(reader["ReturnDate"]).ToString("yyyy-MM-dd");
+                        Console.WriteLine($"Tx #{reader["TransactionID"]} | User: {reader["Name"]} | Book: {reader["Title"]} | Issued: {Convert.ToDateTime(reader["IssueDate"]):yyyy-MM-dd} | Returned: {returnStr}");
+                    }
+                }
             }
         }
     }

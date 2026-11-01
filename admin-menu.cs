@@ -5,7 +5,7 @@ namespace Library
 {
     public class AdminMenuHandler
     {
-       
+
         public void MenuSystem(Library lib)
         {
             while (true)
@@ -103,8 +103,9 @@ namespace Library
                         }
 
                     case "0":
-                        return;
-
+                        
+                            return;
+                        
                     default:
                         Console.WriteLine("Invalid Choice.");
                         break;
