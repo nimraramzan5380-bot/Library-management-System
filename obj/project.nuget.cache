@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "xwxhThnoq/c=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Umair\\source\\repos\\Library\\Library\\Library.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\10.0.12\\microsoft.dotnet.ilcompiler.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.net.illink.tasks\\10.0.12\\microsoft.net.illink.tasks.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\10.0.12\\runtime.win-x64.microsoft.dotnet.ilcompiler.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\10.0.12\\runtime.win-x64.microsoft.dotnet.ilcompiler.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x64\\10.0.12\\microsoft.aspnetcore.app.runtime.win-x64.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x64\\10.0.12\\microsoft.windowsdesktop.app.runtime.win-x64.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x64\\10.0.12\\microsoft.netcore.app.runtime.win-x64.10.0.12.nupkg.sha512",
+    "C:\\Users\\Umair\\.nuget\\packages\\microsoft.netcore.app.runtime.nativeaot.win-x64\\10.0.12\\microsoft.netcore.app.runtime.nativeaot.win-x64.10.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}

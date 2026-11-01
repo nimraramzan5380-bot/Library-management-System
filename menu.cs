@@ -15,7 +15,6 @@ namespace LibrarySystem
             //lib.AddBook(101, "Python Mastery", "Jhon smith", 5);
             //lib.AddBook(102, "Data Science", "Nimra alvi", 2);
         }
-
         public void AdminMenu()
         {
             while (true)
@@ -105,6 +104,9 @@ namespace LibrarySystem
                 }
             }
         }
+}
+
+
 
         public void UserMenu()
         {
