@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Library
 {
-    internal class Library
+    public class Library
     {
         private Dictionary<int, Book> books = new Dictionary<int, Book>();
         private Dictionary<int, User> users = new Dictionary<int, User>();         
