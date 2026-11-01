@@ -60,7 +60,7 @@ namespace Library
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Console.WriteLine("\n--- BOOKS IN DATABASE ---");
+                    Console.WriteLine("\n BOOKS IN DATABASE ");
                     if (!reader.HasRows)
                     {
                         Console.WriteLine("No books found in database.");
@@ -69,7 +69,7 @@ namespace Library
 
                     while (reader.Read())
                     {
-                        Console.WriteLine($"ID: {reader["BookID"]} | Title: {reader["Title"]} | Author: {reader["Author"]} | Copies: {reader["Quantity"]}");
+                        Console.WriteLine($"ID: {reader["BookID"]} \n Title: {reader["Title"]} \n Author: {reader["Author"]} \n Copies: {reader["Quantity"]}");
                     }
                 }
             }
@@ -89,7 +89,7 @@ namespace Library
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        Console.WriteLine($"\n--- SEARCH RESULTS FOR '{queryText}' ---");
+                        Console.WriteLine($"\n SEARCH RESULTS FOR '{queryText}'");
                         if (!reader.HasRows)
                         {
                             Console.WriteLine("No matching books found.");
@@ -98,7 +98,7 @@ namespace Library
 
                         while (reader.Read())
                         {
-                            Console.WriteLine($"ID: {reader["BookID"]} | Title: {reader["Title"]} | Author: {reader["Author"]} | Copies: {reader["Quantity"]}");
+                            Console.WriteLine($"ID: {reader["BookID"]} \n Title: {reader["Title"]} \n Author: {reader["Author"]} \n Copies: {reader["Quantity"]}");
                         }
                     }
                 }
@@ -142,7 +142,7 @@ namespace Library
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Console.WriteLine("\n--- USERS LIST ---");
+                    Console.WriteLine("\n USERS LIST ");
                     if (!reader.HasRows)
                     {
                         Console.WriteLine("No users registered.");
@@ -151,7 +151,7 @@ namespace Library
 
                     while (reader.Read())
                     {
-                        Console.WriteLine($"User ID: {reader["UserID"]} | Name: {reader["Name"]}");
+                        Console.WriteLine($"User ID: {reader["UserID"]} \n Name: {reader["Name"]}");
                     }
                 }
             }
@@ -247,7 +247,7 @@ namespace Library
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Console.WriteLine("\n--- TRANSACTION HISTORY ---");
+                    Console.WriteLine("\n TRANSACTION HISTORY ");
                     if (!reader.HasRows)
                     {
                         Console.WriteLine("No history found.");
@@ -257,7 +257,7 @@ namespace Library
                     while (reader.Read())
                     {
                         string returnStr = reader["ReturnDate"] == DBNull.Value ? "Not Returned" : Convert.ToDateTime(reader["ReturnDate"]).ToString("yyyy-MM-dd");
-                        Console.WriteLine($"Tx #{reader["TransactionID"]} | User: {reader["Name"]} | Book: {reader["Title"]} | Issued: {Convert.ToDateTime(reader["IssueDate"]):yyyy-MM-dd} | Returned: {returnStr}");
+                        Console.WriteLine($"Tx #{reader["TransactionID"]} \n User: {reader["Name"]} \n Book: {reader["Title"]} \n Issued: {Convert.ToDateTime(reader["IssueDate"]):yyyy-MM-dd} | Returned: {returnStr}");
                     }
                 }
             }
