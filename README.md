@@ -1,6 +1,6 @@
-                                                          Library Management System
+                                         Library Management System
 
-                   "A database-driven Library Management System built with C# and .NET, featuring persistent storage using SQL Server LocalDB."
+"A database-driven Library Management System built with C# and .NET, featuring persistent storage using SQL Server LocalDB."
 
 
 
